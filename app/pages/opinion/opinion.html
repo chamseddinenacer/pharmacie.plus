@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar global>
+    <ion-title>  <ion-icon name="text"></ion-icon>  Ajouter un avis</ion-title>
+    <ion-buttons end>
+      <button (click)="dismiss()" large>
+        <ion-icon id="favorites" name="close" custom-icon></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <form formModel="opinionForm" (ngSubmit)="doSendOpinion(opinionForm.value)">
+    <div class="rate-pharmacie">
+      <ion-label>Notez votre expérience  </ion-label>
+      <ion-icon id="rateStar1" name="star-outline" (click)="ratePharmacie(1)"></ion-icon>
+      <ion-icon id="rateStar2" name="star-outline" (click)="ratePharmacie(2)"></ion-icon>
+      <ion-icon id="rateStar3" name="star-outline" (click)="ratePharmacie(3)"></ion-icon>
+      <ion-icon id="rateStar4" name="star-outline" (click)="ratePharmacie(4)"></ion-icon>
+      <ion-icon id="rateStar5" name="star-outline" (click)="ratePharmacie(5)"></ion-icon>
+    </div>
+
+    <ion-list>
+
+      <ion-item class="item-rate">
+        <ion-input id='opinion-rate' [ngFormControl]="rate" type="number"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Votre nom</ion-label>
+        <ion-input id='opinion-name' [ngFormControl]="name" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Votre avis</ion-label>
+        <ion-textarea id='opinion-content' [ngFormControl]="opinion" type="text" class="opinion-content"></ion-textarea>
+      </ion-item>
+
+    </ion-list>
+
+    <button type="submit" green end class="send-opinion" >
+      <ion-icon name="send"></ion-icon>
+      Envoyer
+    </button>
+  </form>
+</ion-content>

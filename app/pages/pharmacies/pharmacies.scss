@@ -1,0 +1,49 @@
+.pharmacies {
+
+}
+
+div.selection {
+  font-size: 22px;
+  display: block;
+  text-align: center;
+  padding-top: 5%;
+}
+
+
+.content-title {
+  color: #000;
+}
+
+.content {
+  color: #ccc;
+}
+
+.sub-menu-list {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  flex-flow: space-around;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #333;
+  height: 60px;
+  color: white;
+
+}
+
+.sub-menu-item {
+  text-align: center;
+}
+
+.sub-menu-item ion-icon {
+  font-size: 30px;
+}
+
+.sub-menu-item-selected {
+  border-bottom: 6px solid #5eb95e;
+  color: #5eb95e;
+}
+
+.hidden {
+  display: none;
+}

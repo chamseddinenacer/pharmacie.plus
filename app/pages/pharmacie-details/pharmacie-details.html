@@ -1,0 +1,146 @@
+<ion-header>
+  <ion-navbar global>
+    <button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>  <ion-icon name="medkit"></ion-icon>  Détails</ion-title>
+    <ion-buttons end>
+      <button (click)="toggleFavorite()" large>
+        <ion-icon id="favorites" [name]="pharmacie.favoriteIcon" custom-icon></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content >
+  <div class="pharmacie-details">
+    <h3>{{pharmacie.rs}}</h3>
+
+    <div class="pharmacie-card-container">
+      <div class="pharmacie-card-icon">
+        <ion-icon name="pin"></ion-icon>
+      </div>
+      <div class="pharmacie-card-content">
+        <div>{{pharmacie.numvoie}} {{pharmacie.typvoie}} {{pharmacie.voie}}</div>
+        <div>{{pharmacie.cpville}}</div>
+      </div>
+    </div>
+
+    <div *ngIf="pharmacie.telephone" class="pharmacie-card-container">
+      <div class="pharmacie-card-icon">
+        <ion-icon name="call"></ion-icon>
+      </div>
+      <div class="pharmacie-card-content">
+        <div>{{pharmacie.telephone}}</div>
+      </div>
+    </div>
+
+    <div *ngIf="pharmacie.fax" class="pharmacie-card-container">
+      <div class="pharmacie-card-icon">
+        <ion-icon name="print"></ion-icon>
+      </div>
+      <div class="pharmacie-card-content">
+        <div>{{pharmacie.fax}}</div>
+      </div>
+    </div>
+
+    <div class="pharmacie-card-container opinion-star">
+      <ion-icon name="{{(pharmacie.rate >= 1) ? 'star' : (pharmacie.rate >= 0.5) ? 'star-half' : 'star-outline'}}"></ion-icon>
+      <ion-icon name="{{(pharmacie.rate >= 2) ? 'star' : (pharmacie.rate >= 1.5) ? 'star-half' : 'star-outline'}}"></ion-icon>
+      <ion-icon name="{{(pharmacie.rate >= 3) ? 'star' : (pharmacie.rate >= 2.5) ? 'star-half' : 'star-outline'}}"></ion-icon>
+      <ion-icon name="{{(pharmacie.rate >= 4) ? 'star' : (pharmacie.rate >= 3.5) ? 'star-half' : 'star-outline'}}"></ion-icon>
+      <ion-icon name="{{(pharmacie.rate >= 5) ? 'star' : (pharmacie.rate >= 4.5) ? 'star-half' : 'star-outline'}}"></ion-icon>
+      <span class="pharmacie-opinion">
+        <span *ngIf="!pharmacie.opinions || pharmacie.opinions.length === 0">Aucun avis</span>
+        <span *ngIf="pharmacie.opinions && pharmacie.opinions.length > 0">{{pharmacie.opinions.length}} avis</span>
+      </span>
+    </div>
+
+
+  </div>
+  <div class="pd-sub-menu-container">
+    <div class="pd-sub-menu-item" (click)="navigateToPharmacie()"><ion-icon name="navigate"></ion-icon></div>
+    <div class="pd-sub-menu-item" (click)="share()"><i class="fa fa-share-alt" aria-hidden="true"></i></div>
+    <div class="pd-sub-menu-item" [class.pd-sub-menu-disable]="!pharmacie.telephone">
+      <a *ngIf="pharmacie.telephone" class="pd-sub-menu-item-color" href="tel: {{pharmacie.telephone}}"><ion-icon name="call"></ion-icon></a>
+      <ion-icon *ngIf="!pharmacie.telephone" name="call"></ion-icon>
+    </div>
+  </div>
+
+
+  <div>
+    <ion-segment [(ngModel)]="options">
+      <ion-segment-button value="map" (click)="displayMap($event)">
+        Position
+      </ion-segment-button>
+      <ion-segment-button value="opinions" (click)="fetchOpinions()">
+        Avis
+      </ion-segment-button>
+      <ion-segment-button value="hours" (click)="displayHours($event)">
+        Horaires
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div [ngSwitch]="options">
+    <div *ngSwitchCase="'map'">
+      <div #map id="map"></div>
+    </div>
+
+    <div *ngSwitchCase="'opinions'">
+      <div *ngIf="pharmacie.opinions && pharmacie.opinions.length > 0">
+        <ion-card *ngFor="let opinion of pharmacie.opinions" >
+          <ion-card-content class="content">
+            <div class="content-title">
+              <b class="opinion-author">{{opinion.name}}</b>
+                <span class="opinion-star">
+                  <ion-icon name="{{(opinion.rate >= 1) ? 'star' : 'star-outline'}}"></ion-icon>
+                  <ion-icon name="{{(opinion.rate >= 2) ? 'star' : 'star-outline'}}"></ion-icon>
+                  <ion-icon name="{{(opinion.rate >= 3) ? 'star' : 'star-outline'}}"></ion-icon>
+                  <ion-icon name="{{(opinion.rate >= 4) ? 'star' : 'star-outline'}}"></ion-icon>
+                  <ion-icon name="{{(opinion.rate >= 5) ? 'star' : 'star-outline'}}"></ion-icon>
+                </span>
+              <span class="opinion-timestamp">{{moment.unix(opinion.timestamp).format('DD/MM/YYYY')}}</span>
+            </div>
+
+
+            <div>{{opinion.content}}</div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <div *ngIf="!pharmacie.opinions || pharmacie.opinions.length === 0">
+        <ion-card>
+          <ion-card-content>
+            Aucun avis
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <button fab fab-right fab-bottom green (click)="openModalNewOpinion($event)"> <ion-icon name="text"></ion-icon></button>
+    </div>
+
+    <div *ngSwitchCase="'hours'">
+      <div *ngIf="pharmacie.hours">
+        <ion-card *ngFor="let hour of pharmacie.hours" >
+          <ion-card-content class="content">
+            <div>{{hour.content}}</div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <div *ngIf="!pharmacie.hours">
+        <ion-card>
+          <ion-card-content>
+            Horaires non renseignées
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <button fab fab-right fab-bottom green> <ion-icon name="clock"></ion-icon></button>
+    </div>
+
+  </div>
+
+
+
+</ion-content>
