@@ -1,29 +1,41 @@
 import {Component, ViewChild} from '@angular/core';
 import {ionicBootstrap, Platform, MenuController, Nav} from 'ionic-angular';
-import {StatusBar} from 'ionic-native';
+import {StatusBar, Splashscreen} from 'ionic-native';
 
+import {PushwooshService} from './providers/pushwoosh/ionic2-pushwoosh.service';
+// Importantion du provider Subscriber
+import {SubscriberProvider} from './providers/subscriber/subscriber';
 
 import {PharmaciesPage} from './pages/pharmacies/pharmacies';
 
+declare var _;
+
 @Component({
-  templateUrl: 'build/app.html'
+  templateUrl: 'build/app.html',
+  providers: [PushwooshService, SubscriberProvider]
 })
 class MyApp {
-  @ViewChild(Nav) nav: Nav;
+  @ViewChild(Nav) nav:Nav;
 
   // Page par défaut: liste des pharmacies.
-  rootPage: any = PharmaciesPage;
-  pages: Array<{title: string, component: any}>;
+  rootPage:any = PharmaciesPage;
+  pages:Array<{title: string, component: any}>;
 
-  constructor(
-    public platform: Platform,
-    public menu: MenuController
-  ) {
+  constructor(public platform:Platform,
+              public menu:MenuController,
+              public pushwooshService:PushwooshService,
+              public subscriberProvider:SubscriberProvider) {
     this.initializeApp();
+
+    // On masque le splashscreen
+    this.hideSplashScreen();
+
+    // Initialisation du service de notification push
+    this.pushwooshService.init();
 
     // set our app's pages
     this.pages = [
-      { title: 'Pharmacies', component: PharmaciesPage },
+      {title: 'Liste des pharmacies', component: PharmaciesPage},
     ];
   }
 
@@ -32,6 +44,8 @@ class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
+      StatusBar.backgroundColorByHexString('#4Da84d')
+
     });
   }
 
@@ -42,6 +56,13 @@ class MyApp {
     this.nav.setRoot(page.component);
   }
 
+  hideSplashScreen() {
+    if (Splashscreen) {
+      setTimeout(() => {
+        Splashscreen.hide();
+      }, 100);
+    }
+  }
 
 }
 

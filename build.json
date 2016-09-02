@@ -1,0 +1,18 @@
+{
+  "android": {
+    "debug": {
+      "keystore": "./release.keystore",
+      "storePassword": "CRMdev19",
+      "alias": "pharmacieplus",
+      "password" : "CRMdev19",
+      "keystoreType": ""
+    },
+    "release": {
+      "keystore": "./release.keystore",
+      "storePassword": "CRMdev19",
+      "alias": "pharmacieplus",
+      "password" : "CRMdev19",
+      "keystoreType": ""
+    }
+  }
+}

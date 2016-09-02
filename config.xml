@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="fr.jdflaugergues.pharmacieplus" version="0.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="fr.jdflaugergues.pharmacieplus"
+        version="0.1.0"
+        xmlns="http://www.w3.org/ns/widgets"
+        xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Pharmacie +</name>
   <description>Avec Pharmacie Plus, trouvez toutes les informations des pharmacies les plus proches de chez vous.</description>
   <author email="jdflaugergues@gmail.com">Jonathan de Flaugergues</author>
@@ -41,9 +44,18 @@
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="android-minSdkVersion" value="16"/>
   <preference name="BackupWebStorage" value="none"/>
-  <preference name="SplashScreenDelay" value="2000"/>
-  <preference name="FadeSplashScreenDuration" value="2000"/>
+
+  <preference name="ShowSplashScreen" value="true"/>
   <preference name="SplashScreen" value="screen"/>
+  <preference name="SplashScreenDelay" value="30000"/>
+  <preference name="AutoHideSplashScreen" value="false"/>
+  <preference name="SplashShowOnlyFirstTime" value="false"/>
+  <preference name="FadeSplashScreen" value="false"/>
+  <feature name="SplashScreen">
+    <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen"/>
+  </feature>
+  - See more at: http://www.codingandclimbing.co.uk/blog/ionic-2-fix-splash-screen-white-screen-issue-14#sthash.ihM5JIiT.dpuf
+
   <feature name="StatusBar">
     <param name="ios-package" onload="true" value="CDVStatusBar"/>
   </feature>

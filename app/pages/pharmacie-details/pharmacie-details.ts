@@ -1,12 +1,14 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ModalController, NavController, NavParams, ToastController, Platform, LoadingController } from 'ionic-angular';
-import { SocialSharing } from 'ionic-native';
+import { SocialSharing, Push } from 'ionic-native';
 
 
 // Importantion du provider de Pharmacies
 import {PharmaciesProvider} from '../../providers/pharmacies/pharmacies';
 // Importantion du provider d'avis de pharmacie
 import {OpinionsProvider} from '../../providers/opinions/opinions';
+// Importantion du provider Subscriber
+import {SubscriberProvider} from '../../providers/subscriber/subscriber';
 
 // Importation du modèle de données Pharmacie
 import {Pharmacie} from '../../models/pharmacie';
@@ -29,7 +31,7 @@ declare var moment;
   templateUrl: 'build/pages/pharmacie-details/pharmacie-details.html',
 
   // Ajout du provider Pharmacies et Opinions
-  providers: [PharmaciesProvider, OpinionsProvider]
+  providers: [PharmaciesProvider, OpinionsProvider, SubscriberProvider]
 })
 export class PharmacieDetailsPage {
 
@@ -50,6 +52,7 @@ export class PharmacieDetailsPage {
               private navParams: NavParams,
               private pharmaciesProvider: PharmaciesProvider,
               private opinionsProvider: OpinionsProvider,
+              private subscriberProvider: SubscriberProvider,
               private toastController : ToastController) {
 
     this.moment = moment;
@@ -103,6 +106,9 @@ export class PharmacieDetailsPage {
 
     // Si la pharmacie fait partie des pharmacies favorites
     if (isFavorites) {
+      // On désabonne l'utilisateur aux commentaires de la pharmacie
+      this.subscriberProvider.unsubscribe(this.pharmacie._id);
+
       classIcon = 'ion-md-star-outline';
       msgToast = 'Pharmacie retirée des favoris';
 
@@ -112,6 +118,10 @@ export class PharmacieDetailsPage {
 
     // Si la pharmacie ne fait pas partie des pharmacies favorites
     } else {
+
+      // On abonne l'utilisateur aux commentaires de la pharmacie
+      this.subscriberProvider.subscribe(this.pharmacie._id);
+
       classIcon = 'ion-md-star';
       msgToast = 'Pharmacie ajoutée aux favoris';
 
@@ -192,7 +202,7 @@ Fax: ${this.pharmacie.fax}`,
         map: this.map,
         //animation: google.maps.Animation.BOUNCE,
         //animation: google.maps.Animation.DROP,
-        icon: '../../img/marker.png',
+        icon: './img/marker.png',
         position: latLng
       });
     }.bind(this),0);
@@ -214,7 +224,51 @@ Fax: ${this.pharmacie.fax}`,
   }
 
   displayHours(event) {
-    console.log('displayHours');
+
+    // Enregistrement du device auprès du service de notification
+    let push = Push.init({
+      android: {
+        senderID: "921632069444"
+      },
+      ios: {
+        alert: "true",
+        badge: true,
+        sound: 'false'
+      },
+      windows: {}
+    });
+
+    if (push.hasOwnProperty('error')) {
+      console.log(push['error']);
+    } else {
+
+      // Le device est bien enregistrée auprès du service push
+      push.on('registration', (data) => {
+        console.log(data.registrationId);
+        alert(data.registrationId.toString());
+
+        localStorage.setItem('registrationId', data.registrationId.toString());
+
+        // On abonne le client a toutes ses pharmacies favorites
+        if (localStorage.getItem('favorites')) {
+          let favorites = JSON.parse(localStorage.getItem('favorites'));
+          _.forEach(favorites => (pharmacieId) => {
+            this.subscriberProvider.subscribe(pharmacieId);
+          });
+        }
+
+      });
+
+      // Réception d'un push de notification
+      push.on('notification', (data) => {
+        console.log(data);
+        alert("Hi, Am a push notification");
+      });
+
+      push.on('error', (e) => {
+        console.log(e.message);
+      });
+    }
 
   }
 
