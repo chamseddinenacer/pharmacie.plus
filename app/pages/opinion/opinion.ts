@@ -5,53 +5,39 @@ import {ModalController, Platform, NavParams, ViewController, NavController, Toa
 // Importantion du provider de Pharmacies
 import {OpinionsProvider} from '../../providers/opinions/opinions';
 
-import {FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES} from '@angular/forms';
+import { REACTIVE_FORM_DIRECTIVES} from '@angular/forms';
 //import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
-import { FormBuilder,  ControlGroup, Validators, AbstractControl} from '@angular/common';
+import {FORM_DIRECTIVES, FormBuilder,  ControlGroup, Validators, AbstractControl} from '@angular/common';
+import {IONIC_DIRECTIVES} from 'ionic-angular';
+
 
 declare var $;
 declare var moment;
 
 @Component({
+  selector: 'opinionForm',
   templateUrl: 'build/pages/opinion/opinion.html',
-  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
+  directives: [IONIC_DIRECTIVES, FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
 
   // Ajout du provider Pharmacies
   providers: [OpinionsProvider]
 })
 export class OpinionPage {
   pharmacieId: String;
-  opinionForm: ControlGroup;
-  rate: AbstractControl;
-  name: AbstractControl;
-  content: AbstractControl;
+
   loader: any;
 
   constructor(
     public platform: Platform,
     public params: NavParams,
     public viewCtrl: ViewController,
-    public fb: FormBuilder,
     private navController: NavController,
     private toastController : ToastController,
     private opinionsProvider: OpinionsProvider,
     private loadingController: LoadingController
   ) {
-
     this.pharmacieId = params.get('pharmacieId');
-    console.log(`pharmacieId = ${this.pharmacieId}`);
-
-    this.opinionForm = fb.group({
-      rate: ['', Validators.required],
-      name: ['', Validators.required],
-      opinion: ['', Validators.required]
-    });
-
-    this.rate = this.opinionForm.controls['rate'];
-    this.name = this.opinionForm.controls['name'];
-    this.content = this.opinionForm.controls['content'];
-
   }
 
   // Affichage de la mire de chargment lors de la soumission du formulaire
@@ -63,12 +49,12 @@ export class OpinionPage {
   }
 
   // Envoi du formulaire d'ajout d'un avis
-  doSendOpinion(value: string): void {
+  doSendOpinion(): void {
 
     // Récupération des champs du formulaire
     let rate = $('#opinion-rate').val();
-    let name = $('#opinion-name').children().attr('ng-reflect-model')
-    let content = $('#opinion-content').children().attr('ng-reflect-model')
+    let name = $('#opinion-name').children().val();
+    let content = $('#opinion-content').children().val();
     let timestamp = moment().unix();
 
     // Si un des champs n'est pas saisi, on affiche un message

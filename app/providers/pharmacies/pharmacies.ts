@@ -19,7 +19,7 @@ export class PharmaciesProvider {
 
   prod: string = 'http://api-pharmacieplus.rhcloud.com';
   preprod: string = 'http://localhost:8080';
-  apiURL: string = this.preprod;
+  apiURL: string = this.prod;
 
   constructor(private http: Http) {}
 

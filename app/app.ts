@@ -1,3 +1,6 @@
+import {enableProdMode} from '@angular/core';
+enableProdMode();
+
 import {Component, ViewChild} from '@angular/core';
 import {ionicBootstrap, Platform, MenuController, Nav} from 'ionic-angular';
 import {StatusBar, Splashscreen} from 'ionic-native';
@@ -25,6 +28,7 @@ class MyApp {
               public menu:MenuController,
               public pushwooshService:PushwooshService,
               public subscriberProvider:SubscriberProvider) {
+
     this.initializeApp();
 
     // On masque le splashscreen
