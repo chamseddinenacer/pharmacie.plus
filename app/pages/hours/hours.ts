@@ -10,6 +10,7 @@ import {Pharmacie} from '../../models/pharmacie';
 
 declare var $;
 declare var moment;
+declare var _;
 
 @Component({
   selector: 'opinionForm',
@@ -179,18 +180,28 @@ export class HoursPage {
       su: {amo: ttom(this.suAmo), amc: ttom(this.suAmc), pmo: ttom(this.suPmo), pmc: ttom(this.suPmc)}
     }
 
-    this.pharmacie.hours = hours;
-
-    // On envoie le formulaire via le provider.
-    this.displayLoader();
-    let ret = this.pharmaciesProvider
-      .patchHours(hours, this.pharmacie._id)
-      .subscribe(pharmacie => {
-        this.leftEvent.emit('dismiss');
-        this.dismiss();
-        this.loader.dismiss();
+    // Si il n'y a pas eu de changement d'horaire, on n'autorise pas la sauvegarde
+    if (_.isEqual(this.pharmacie.hours, hours)) {
+      let toast = this.toastController.create({
+        message: "Veuillez modifier au moins une heure.",
+        duration: 3000,
+        position: 'middle'
       });
+      toast.present();
+    } else {
 
+      this.pharmacie.hours = hours;
+
+      // On envoie le formulaire via le provider.
+      this.displayLoader();
+      let ret = this.pharmaciesProvider
+        .patchHours(hours, this.pharmacie._id)
+        .subscribe(pharmacie => {
+          this.leftEvent.emit('dismiss');
+          this.dismiss();
+          this.loader.dismiss();
+        });
+    }
   }
 
   // Fermeture du formulaire et retour à la page précédente.

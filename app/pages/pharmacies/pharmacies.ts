@@ -93,7 +93,7 @@ export class PharmaciesPage {
   // Et mets dans le champ open, résultat.
   resolveOpen(pharmacies) {
 
-    let hourNow = Math.trunc(new Date().getHours() * 60 + new Date().getMinutes() / 0.60);
+    let hourNow = Math.trunc(new Date().getHours() * 60 + new Date().getMinutes());
     let day;
     switch(new Date().getDay()) {
       case 1: day = 'mo'; break;
@@ -130,7 +130,7 @@ export class PharmaciesPage {
 
           // On est la matin et la pharmacie est ouverte
           if (hourNow > pharmacie.hours[day].amo && hourNow < pharmacie.hours[day].amc) {
-            pharmacie.open = `Ouvert jusqu'à ${formatHours(pharmacie.hours[day].amc)}`;
+            pharmacie.open = `Ouverte jusqu'à ${formatHours(pharmacie.hours[day].amc)}`;
             pharmacie.status = 1;
 
           // Horaires de l'après-midi renseignés
