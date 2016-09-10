@@ -122,9 +122,36 @@
 
     <div *ngSwitchCase="'hours'">
       <div *ngIf="pharmacie.hours">
-        <ion-card *ngFor="let hour of pharmacie.hours" >
-          <ion-card-content class="content">
-            <div>{{hour.content}}</div>
+        <ion-card>
+          <ion-card-content>
+            <div class="hours-content row-pair">
+              <div class="hours-items-day">Lundi</div>
+              <div class="hours-items-hours">{{hours.mo}}</div>
+            </div>
+            <div class="hours-content row-odd">
+              <div class="hours-items-day">Mardi</div>
+              <div class="hours-items-hours">{{hours.tu}}</div>
+            </div>
+            <div class="hours-content row-pair">
+              <div class="hours-items-day">Mercredi</div>
+              <div class="hours-items-hours">{{hours.we}}</div>
+            </div>
+            <div class="hours-content row-odd">
+              <div class="hours-items-day">Jeudi</div>
+              <div class="hours-items-hours">{{hours.th}}</div>
+            </div>
+            <div class="hours-content row-pair">
+              <div class="hours-items-day">Vendredi</div>
+              <div class="hours-items-hours">{{hours.fr}}</div>
+            </div>
+            <div class="hours-content row-odd">
+              <div class="hours-items-day">Samedi</div>
+              <div class="hours-items-hours">{{hours.sa}}</div>
+            </div>
+            <div class="hours-content row-pair">
+              <div class="hours-items-day">Dimanche</div>
+              <div class="hours-items-hours">{{hours.su}}</div>
+            </div>
           </ion-card-content>
         </ion-card>
       </div>
@@ -136,7 +163,7 @@
         </ion-card>
       </div>
 
-      <button fab fab-right fab-bottom green> <ion-icon name="clock"></ion-icon></button>
+      <button fab fab-right fab-bottom green (click)="openModalUpdateHours($event)"> <ion-icon name="clock"></ion-icon></button>
     </div>
 
   </div>

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {Http, RequestOptions, Headers, RequestMethod, Request} from '@angular/http';
 import {Geolocation} from 'ionic-native';
 import 'rxjs/add/operator/map';
 
@@ -19,7 +19,7 @@ export class PharmaciesProvider {
 
   prod: string = 'http://api-pharmacieplus.rhcloud.com';
   preprod: string = 'http://localhost:8080';
-  apiURL: string = this.prod;
+  apiURL: string = this.preprod;
 
   constructor(private http: Http) {}
 
@@ -90,6 +90,53 @@ export class PharmaciesProvider {
           resolve(pharmacies);
         });
     });
+  }
+
+  // Met a jour les horaires d'ouverture d'une pharmacie
+  patchHours(hours, idPharmacie) {
+
+    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' });
+    let options = new RequestOptions({
+      headers: headers,
+      method: RequestMethod.Post,
+      url: `${this.apiURL}/v1/pharmacies/${idPharmacie}`,
+      body: this.jsonToFormData({hours: JSON.stringify(hours)})
+    });
+
+    return this.http.request(new Request(options))
+      .map(res => res.json() || {} );
+
+/*
+    console.log(hours);
+
+    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' });
+    let options = new RequestOptions({
+      headers: headers,
+      method: RequestMethod.Post,
+      url: `${this.apiURL}/v1/pharmacies/${idPharmacie}`,
+      body: this.jsonToFormData(hours)
+      //body: hours
+    });
+
+    return new Promise(resolve => {
+
+      this.http.request(new Request(options))
+        .map(res => res.json() || {} )
+        .subscribe(pharmacies => {
+          resolve(pharmacies);
+        });
+    });*/
+  }
+
+  // Transforme un objet JSON en chaine de type FormData pour envoyer des données dans une requête en POST
+  jsonToFormData(obj) {
+    let parts = [];
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
+      }
+    }
+    return parts.join('&');
   }
 
 }

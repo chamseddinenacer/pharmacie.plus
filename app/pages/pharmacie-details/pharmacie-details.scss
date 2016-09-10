@@ -88,3 +88,27 @@
 .opinion-timestamp {
   float: right;
 }
+
+.hours-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.hours-items-day {
+  width: 25%;
+  text-align: end;
+  font-weight: bold;
+}
+
+.hours-items-hours {
+  width: 75%;
+  text-align: center;
+}
+
+.row-odd {
+  background-color: lightgrey;
+}
+
+.row-pair {
+
+}

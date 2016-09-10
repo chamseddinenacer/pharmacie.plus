@@ -1,0 +1,145 @@
+<ion-header>
+  <ion-toolbar global>
+    <ion-title>  <ion-icon name="text"></ion-icon>  Mettre à jour les horaires</ion-title>
+    <ion-buttons end>
+      <button (click)="dismiss()" large>
+        <ion-icon id="favorites" name="close" custom-icon></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>Lundi</ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col width-25> <ion-label>Matin:</ion-label></ion-col>
+          <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="moAmo"> </ion-datetime></ion-item></ion-col>
+          <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="moAmc"> </ion-datetime> </ion-item></ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-row>
+        <ion-col width-25> <ion-label>Aprèm:</ion-label></ion-col>
+        <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="moPmo"> </ion-datetime></ion-item></ion-col>
+        <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="moPmc"> </ion-datetime> </ion-item></ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+  <ion-card-header>Mardi</ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col width-25> <ion-label>Matin:</ion-label></ion-col>
+        <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="tuAmo"> </ion-datetime></ion-item></ion-col>
+        <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="tuAmc"> </ion-datetime> </ion-item></ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-row>
+      <ion-col width-25> <ion-label>Aprèm:</ion-label></ion-col>
+      <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="tuPmo"> </ion-datetime></ion-item></ion-col>
+      <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="tuPmc"> </ion-datetime> </ion-item></ion-col>
+    </ion-row>
+  </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+  <ion-card-header>Mercredi</ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col width-25> <ion-label>Matin:</ion-label></ion-col>
+        <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="weAmo"> </ion-datetime></ion-item></ion-col>
+        <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="weAmc"> </ion-datetime> </ion-item></ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-row>
+      <ion-col width-25> <ion-label>Aprèm:</ion-label></ion-col>
+      <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="wePmo"> </ion-datetime></ion-item></ion-col>
+      <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="wePmc"> </ion-datetime> </ion-item></ion-col>
+    </ion-row>
+  </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+  <ion-card-header>Jeudi</ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col width-25> <ion-label>Matin:</ion-label></ion-col>
+        <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="thAmo"> </ion-datetime></ion-item></ion-col>
+        <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="thAmc"> </ion-datetime> </ion-item></ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-row>
+      <ion-col width-25> <ion-label>Aprèm:</ion-label></ion-col>
+      <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="thPmo"> </ion-datetime></ion-item></ion-col>
+      <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="thPmc"> </ion-datetime> </ion-item></ion-col>
+    </ion-row>
+  </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+  <ion-card-header>Vendredi</ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col width-25> <ion-label>Matin:</ion-label></ion-col>
+        <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="frAmo"> </ion-datetime></ion-item></ion-col>
+        <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="frAmc"> </ion-datetime> </ion-item></ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-row>
+      <ion-col width-25> <ion-label>Aprèm:</ion-label></ion-col>
+      <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="frPmo"> </ion-datetime></ion-item></ion-col>
+      <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="frPmc"> </ion-datetime> </ion-item></ion-col>
+    </ion-row>
+  </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+  <ion-card-header>Samedi</ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col width-25> <ion-label>Matin:</ion-label></ion-col>
+        <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="saAmo"> </ion-datetime></ion-item></ion-col>
+        <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="saAmc"> </ion-datetime> </ion-item></ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-row>
+      <ion-col width-25> <ion-label>Aprèm:</ion-label></ion-col>
+      <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="saPmo"> </ion-datetime></ion-item></ion-col>
+      <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="saPmc"> </ion-datetime> </ion-item></ion-col>
+    </ion-row>
+  </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+  <ion-card-header>Dimanche</ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col width-25> <ion-label>Matin:</ion-label></ion-col>
+        <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="suAmo"> </ion-datetime></ion-item></ion-col>
+        <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="suAmc"> </ion-datetime> </ion-item></ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-row>
+      <ion-col width-25> <ion-label>Aprèm:</ion-label></ion-col>
+      <ion-col><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="suPmo"> </ion-datetime></ion-item></ion-col>
+      <ion-col width-33><ion-item><ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" [(ngModel)]="suPmc"> </ion-datetime> </ion-item></ion-col>
+    </ion-row>
+  </ion-card-content>
+  </ion-card>
+
+    <button type="submit" green end class="send-hours" (click)="doSendHours()" >
+      <ion-icon name="send"></ion-icon>
+      Envoyer
+    </button>
+
+</ion-content>

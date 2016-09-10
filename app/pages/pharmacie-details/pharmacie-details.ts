@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, EventEmitter, ApplicationRef, NgZone } from '@angular/core';
 import { ModalController, NavController, NavParams, ToastController, Platform, LoadingController } from 'ionic-angular';
 import { SocialSharing, Push } from 'ionic-native';
 
@@ -15,6 +15,9 @@ import {Pharmacie} from '../../models/pharmacie';
 
 // Importation de la page de détail d'une pharmacie
 import {OpinionPage} from '../opinion/opinion';
+
+// Importation de la page de saisie des horaires de la pharmacie
+import {HoursPage} from '../hours/hours';
 
 declare var google;
 declare var $;
@@ -43,6 +46,7 @@ export class PharmacieDetailsPage {
   loader: any;
   options: string;
   moment: any;
+  hours: { mo: string, tu: string, we: string, th: string, fr: string, sa: string, su: string};
 
   constructor(
               public modalCtrl: ModalController,
@@ -53,6 +57,8 @@ export class PharmacieDetailsPage {
               private pharmaciesProvider: PharmaciesProvider,
               private opinionsProvider: OpinionsProvider,
               private subscriberProvider: SubscriberProvider,
+              private applicationRef: ApplicationRef,
+              private zone: NgZone,
               private toastController : ToastController) {
 
     this.moment = moment;
@@ -80,9 +86,61 @@ export class PharmacieDetailsPage {
 
         this.fetchOpinions(); // Récupère les avis pour avoir la note moyenne de la pharmacie
 
+        this.formatHours();
+
         this.loader.dismiss();  // On efface la mire de chargement
         this.displayMap();      // On affiche la carte avec la position de la pharmacie
       })
+  }
+
+  // Formate les horaires d'ouverture en une heure au format HH:mm
+  formatHours() {
+    if (this.pharmacie.hours) {
+
+      function addZero(i) {
+        if (i < 10) {
+          i = "0" + i;
+        }
+        return i;
+      }
+
+      function formatDay(amo, amc, pmo, pmc) {
+
+        if (amo == 0 && pmc == 1440)
+          return 'Ouvert 24h/24';
+
+        // Pas d'horaire le matin
+        if (amo == 0 && amc == 0) {
+          // Pas d'horaire l'après midi
+          if (pmo == 0 || pmc == 0)
+            return 'Fermé';
+          else
+            return `${addZero(Math.trunc(pmo/60))}:${addZero(pmo%60)}-${addZero(Math.trunc(pmc/60))}:${addZero(pmc%60)}`;
+
+        // Horaires le matin
+        } else {
+
+          let hours = `${addZero(Math.trunc(amo/60))}:${addZero(amo%60)}-${addZero(Math.trunc(amc/60))}:${addZero(amc%60)}`;
+
+          // Horaires l'après midi
+          if (pmo != 0 && pmc != 0)
+            hours += ` ${addZero(Math.trunc(pmo/60))}:${addZero(pmo%60)}-${addZero(Math.trunc(pmc/60))}:${addZero(pmc%60)}`;
+
+          return hours;
+        }
+      };
+
+      this.hours = {
+        mo: formatDay(this.pharmacie.hours.mo.amo, this.pharmacie.hours.mo.amc, this.pharmacie.hours.mo.pmo, this.pharmacie.hours.mo.pmc),
+        tu: formatDay(this.pharmacie.hours.tu.amo, this.pharmacie.hours.tu.amc, this.pharmacie.hours.tu.pmo, this.pharmacie.hours.tu.pmc),
+        we: formatDay(this.pharmacie.hours.we.amo, this.pharmacie.hours.we.amc, this.pharmacie.hours.we.pmo, this.pharmacie.hours.we.pmc),
+        th: formatDay(this.pharmacie.hours.th.amo, this.pharmacie.hours.th.amc, this.pharmacie.hours.th.pmo, this.pharmacie.hours.th.pmc),
+        fr: formatDay(this.pharmacie.hours.fr.amo, this.pharmacie.hours.fr.amc, this.pharmacie.hours.fr.pmo, this.pharmacie.hours.fr.pmc),
+        sa: formatDay(this.pharmacie.hours.sa.amo, this.pharmacie.hours.sa.amc, this.pharmacie.hours.sa.pmo, this.pharmacie.hours.sa.pmc),
+        su: formatDay(this.pharmacie.hours.su.amo, this.pharmacie.hours.su.amc, this.pharmacie.hours.su.pmo, this.pharmacie.hours.su.pmc)
+      };
+
+    }
   }
 
   // Regarde dans le localStorage si la pharmacie fait partie des pharmacies favorites
@@ -225,50 +283,7 @@ Fax: ${this.pharmacie.fax}`,
 
   displayHours(event) {
 
-    // Enregistrement du device auprès du service de notification
-    let push = Push.init({
-      android: {
-        senderID: "921632069444"
-      },
-      ios: {
-        alert: "true",
-        badge: true,
-        sound: 'false'
-      },
-      windows: {}
-    });
 
-    if (push.hasOwnProperty('error')) {
-      console.log(push['error']);
-    } else {
-
-      // Le device est bien enregistrée auprès du service push
-      push.on('registration', (data) => {
-        console.log(data.registrationId);
-        alert(data.registrationId.toString());
-
-        localStorage.setItem('registrationId', data.registrationId.toString());
-
-        // On abonne le client a toutes ses pharmacies favorites
-        if (localStorage.getItem('favorites')) {
-          let favorites = JSON.parse(localStorage.getItem('favorites'));
-          _.forEach(favorites => (pharmacieId) => {
-            this.subscriberProvider.subscribe(pharmacieId);
-          });
-        }
-
-      });
-
-      // Réception d'un push de notification
-      push.on('notification', (data) => {
-        console.log(data);
-        alert("Hi, Am a push notification");
-      });
-
-      push.on('error', (e) => {
-        console.log(e.message);
-      });
-    }
 
   }
 
@@ -276,6 +291,30 @@ Fax: ${this.pharmacie.fax}`,
   openModalNewOpinion(event) {
     let modal = this.modalCtrl.create(OpinionPage, { pharmacieId: this.pharmacie._id});
     modal.present();
+  }
+
+  // Ouvre la page du formulaire de modification des horaires de la pharmacie.
+  openModalUpdateHours(event) {
+
+    let leftEvent = new EventEmitter();
+
+    leftEvent.subscribe(data => {
+      this.pharmaciesProvider.loadDetails(this.id)
+        .then( pharmacie => {
+          this.pharmacie = pharmacie;
+          this.pharmacie.isFavorite = this.isFavorite();
+          this.pharmacie.favoriteIcon = this.isFavorite() ? 'star' : 'star-outline' ;
+          this.fetchOpinions(); // Récupère les avis pour avoir la note moyenne de la pharmacie
+          this.formatHours();
+          this.displayMap();      // On affiche la carte avec la position de la pharmacie
+          this.applicationRef.tick();
+          this.zone.run(() => {console.log('enabled time travel');})
+        })
+    });
+
+    let modal = this.modalCtrl.create(HoursPage, { pharmacie: this.pharmacie, event: leftEvent});
+    modal.present();
+
   }
 
 }

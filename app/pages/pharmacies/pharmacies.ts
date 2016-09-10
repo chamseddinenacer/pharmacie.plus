@@ -42,7 +42,8 @@ export class PharmaciesPage {
       // On assigne le résultat de la promesse à la variable locale pharmacies.
       .then(pharmacies => {
         this.loader.dismiss();
-        return this.pharmacies = this.formatDistance(pharmacies);
+        this.pharmacies = this.formatDistance(pharmacies);
+        return this.pharmacies = this.resolveOpen(pharmacies);
       });
   }
 
@@ -85,6 +86,96 @@ export class PharmaciesPage {
     this.nav.push(PharmacieDetailsPage, {
       rs: pharmacie.rs,
       id: pharmacie._id
+    });
+  }
+
+  // Pour chaque pharmacie, regarde si elle est ouverte ou fermée en fonction de l'heure actuelle.
+  // Et mets dans le champ open, résultat.
+  resolveOpen(pharmacies) {
+
+    let hourNow = Math.trunc(new Date().getHours() * 60 + new Date().getMinutes() / 0.60);
+    let day;
+    switch(new Date().getDay()) {
+      case 1: day = 'mo'; break;
+      case 2: day = 'tu'; break;
+      case 3: day = 'we'; break;
+      case 4: day = 'th'; break;
+      case 5: day = 'fr'; break;
+      case 6: day = 'sa'; break;
+      case 7: day = 'su'; break;
+    }
+
+    function addZero(i) {
+      if (i < 10) {
+        i = "0" + i;
+      }
+      return i;
+    }
+
+    function formatHours(hour){
+      return `${addZero(Math.trunc(hour/60))}:${addZero(Math.trunc(hour%60))}`;
+    }
+
+    return _.map(pharmacies, (pharmacie) => {
+      let hours = pharmacie.hours;
+
+      // Pas d'horaire renseignés
+      if (!hours) {
+        pharmacie.open = 'Horaires non renseignés';
+        pharmacie.status = 2;
+
+      }else {
+        // Horaires du matin renseignés
+        if (pharmacie.hours[day].amo) {
+
+          // On est la matin et la pharmacie est ouverte
+          if (hourNow > pharmacie.hours[day].amo && hourNow < pharmacie.hours[day].amc) {
+            pharmacie.open = `Ouvert jusqu'à ${formatHours(pharmacie.hours[day].amc)}`;
+            pharmacie.status = 1;
+
+          // Horaires de l'après-midi renseignés
+          } else if (pharmacie.hours[day].pmo) {
+            // On est l'après midi et la pharmacie est ouverte
+            if (hourNow > pharmacie.hours[day].pmo && hourNow < pharmacie.hours[day].pmc) {
+              pharmacie.open = `Ouverte jusqu'à ${formatHours(pharmacie.hours[day].pmc)}`;
+              pharmacie.status = 1;
+            // Pharmacie fermée
+            } else {
+              pharmacie.status = 0;
+              if (hourNow > pharmacie.hours[day].amc && hourNow < pharmacie.hours[day].pmo) {
+                pharmacie.open = `Fermée (Ouverture à ${formatHours(pharmacie.hours[day].pmo)})`; // Ouvre l'après midi
+              } else if (hourNow < pharmacie.hours[day].amo){
+                pharmacie.open = `Fermée (Ouverture à ${formatHours(pharmacie.hours[day].amo)})`; // Ouvre le matin
+              } else {
+                pharmacie.open = `Fermée`;
+              }
+            }
+          // Pas d'horaires renseignés pour l'après-midi.
+          } else {
+            pharmacie.status = 0;
+            pharmacie.open = `Fermée`;
+          }
+
+        // Horaires renseignés que pour l'après-midi
+        } else if (pharmacie.hours[day].pmo) {
+
+          // On est l'après midi et la pharmacie est ouverte
+          if (hourNow > pharmacie.hours[day].pmo && hourNow < pharmacie.hours[day].pmc) {
+            pharmacie.open = `Ouverte jusqu'à ${formatHours(pharmacie.hours[day].pmc)}`;
+            pharmacie.status = 1;
+            // Pharmacie fermée
+          } else if (hourNow < pharmacie.hours[day].pmo){
+            pharmacie.open = `Fermée (Ouverture à ${formatHours(pharmacie.hours[day].pmo)})`;
+          } else {
+            pharmacie.status = 0;
+            pharmacie.open = `Fermée`;
+          }
+        } else {
+          pharmacie.open = 'Fermée';
+          pharmacie.status = 0;
+        }
+      }
+      return pharmacie;
     });
   }
 

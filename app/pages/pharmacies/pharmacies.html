@@ -21,7 +21,7 @@
     <ion-card-content class="content">
       <div class="content-title"><b>{{pharmacie.rs}}</b></div>
       <div>{{pharmacie.cpville}} <span *ngIf="pharmacie.distance">-</span> {{pharmacie.distance}}</div>
-      <div>Horaires non renseignés</div>
+      <div [ngClass]="{open: pharmacie.status == 1, close: pharmacie.status == 0}">{{pharmacie.open}}</div>
     </ion-card-content>
   </ion-card>
 </ion-content>

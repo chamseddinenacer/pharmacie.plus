@@ -1,0 +1,37 @@
+.hours {
+
+}
+
+ion-card ion-card-header {
+  padding-bottom: 0;
+  font-weight: bold;
+}
+
+ion-card-content {
+  padding: 0;
+}
+
+ion-grid {
+  padding: 0;
+}
+
+.item-datetime ion-datetime {
+  position: initial;
+}
+
+ion-col {
+  padding: 0;
+}
+
+ion-col ion-item.item{
+  padding-left: 0;
+}
+
+ion-col ion-label {
+  margin: 13px 0 13px 0;
+}
+
+.send-hours {
+  float: right;
+  right: 10px;
+}
