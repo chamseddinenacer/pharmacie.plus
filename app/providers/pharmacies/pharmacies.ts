@@ -19,7 +19,7 @@ export class PharmaciesProvider {
 
   prod: string = 'http://api-pharmacieplus.rhcloud.com';
   preprod: string = 'http://localhost:8080';
-  apiURL: string = this.preprod;
+  apiURL: string = this.prod;
 
   constructor(private http: Http) {}
 
@@ -106,26 +106,6 @@ export class PharmaciesProvider {
     return this.http.request(new Request(options))
       .map(res => res.json() || {} );
 
-/*
-    console.log(hours);
-
-    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' });
-    let options = new RequestOptions({
-      headers: headers,
-      method: RequestMethod.Post,
-      url: `${this.apiURL}/v1/pharmacies/${idPharmacie}`,
-      body: this.jsonToFormData(hours)
-      //body: hours
-    });
-
-    return new Promise(resolve => {
-
-      this.http.request(new Request(options))
-        .map(res => res.json() || {} )
-        .subscribe(pharmacies => {
-          resolve(pharmacies);
-        });
-    });*/
   }
 
   // Transforme un objet JSON en chaine de type FormData pour envoyer des données dans une requête en POST
