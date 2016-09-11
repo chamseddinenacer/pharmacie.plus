@@ -10,6 +10,7 @@ import {PushwooshService} from './providers/pushwoosh/ionic2-pushwoosh.service';
 import {SubscriberProvider} from './providers/subscriber/subscriber';
 
 import {PharmaciesPage} from './pages/pharmacies/pharmacies';
+import {AboutPage} from './pages/about/about';
 
 declare var _;
 
@@ -40,6 +41,7 @@ class MyApp {
     // set our app's pages
     this.pages = [
       {title: 'Liste des pharmacies', component: PharmaciesPage},
+      {title: 'A propos', component: AboutPage}
     ];
   }
 
