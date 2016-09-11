@@ -278,7 +278,7 @@ export class PharmaciesPage {
       }
 
     }
-
+    !searchTerm && this.displayLoader();
     // Ajout de la géoloc si il n'y a pas les favoris et une valeur de recherche
     if (isNotFavorites && !isSearchValue) {
       Geolocation.getCurrentPosition().then((position) => {
@@ -290,6 +290,7 @@ export class PharmaciesPage {
           .then(pharmacies => {
             this.pharmacies = this.resolveOpen(pharmacies);
             this.pharmacies = this.formatDistance(pharmacies);
+            !searchTerm && this.loader.dismiss();
           });
 
       }, (err) => {
@@ -299,6 +300,7 @@ export class PharmaciesPage {
           .then(pharmacies => {
             this.pharmacies = this.resolveOpen(pharmacies);
             this.pharmacies = this.formatDistance(pharmacies);
+            !searchTerm && this.loader.dismiss();
           });
       });
     } else {
@@ -309,6 +311,7 @@ export class PharmaciesPage {
         .then(pharmacies => {
           this.pharmacies = this.resolveOpen(pharmacies);
           this.pharmacies = this.formatDistance(pharmacies);
+          !searchTerm && this.loader.dismiss();
         });
     }
   }
