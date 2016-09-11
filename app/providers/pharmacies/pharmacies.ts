@@ -64,6 +64,20 @@ export class PharmaciesProvider {
     });
   }
 
+  // Recherche une pharmacie avec plusieurs paramètre
+  searchMultiParams(params) {
+
+    return new Promise<Array<Pharmacie>>(resolve => {
+
+      this.http.get(`${this.apiURL}/v1/pharmacies/search?${params.join('&')}`)
+        // cast le resultat en un tableau de pharmacie
+        .map(res => <Array<Pharmacie>>(res.json()))
+        .subscribe(pharmacies => {
+          resolve(pharmacies);
+        });
+    });
+  }
+
   // Recherche une pharmacie
   searchPharmacies(searchParam: string) {
 
@@ -91,6 +105,34 @@ export class PharmaciesProvider {
         });
     });
   }
+
+  // Recherche une pharmacie
+  searchOpenedPharmacies() {
+
+    let hourNow = Math.trunc(new Date().getHours() * 60 + new Date().getMinutes());
+    let day;
+
+    switch(new Date().getDay()) {
+      case 1: day = 'mo'; break;
+      case 2: day = 'tu'; break;
+      case 3: day = 'we'; break;
+      case 4: day = 'th'; break;
+      case 5: day = 'fr'; break;
+      case 6: day = 'sa'; break;
+      case 0: day = 'su'; break;
+    }
+
+    return new Promise<Array<Pharmacie>>(resolve => {
+
+      this.http.get(`${this.apiURL}/v1/pharmacies/search?hours.${day}=${hourNow}`)
+        // cast le resultat en un tableau de pharmacie
+        .map(res => <Array<Pharmacie>>(res.json()))
+        .subscribe(pharmacies => {
+          resolve(pharmacies);
+        });
+    });
+  }
+
 
   // Met a jour les horaires d'ouverture d'une pharmacie
   patchHours(hours, idPharmacie) {

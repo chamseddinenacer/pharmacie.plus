@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, LoadingController  } from 'ionic-angular';
+import {Geolocation} from 'ionic-native'
 
 // Importantion du provider de Pharmacies
 import {PharmaciesProvider} from '../../providers/pharmacies/pharmacies';
@@ -25,6 +26,8 @@ declare var $;
 })
 export class PharmaciesPage {
 
+  public searchValue: string;
+
   // Déclaration d'une variable locale de type Array de Pharmacies
   pharmacies: Pharmacie[];
   pharmaciesProvider: any;
@@ -32,7 +35,7 @@ export class PharmaciesPage {
 
   // Injection du provider dans le constructor denotre page composant
   constructor(public nav: NavController, private loadingController: LoadingController, pharmaciesProvider: PharmaciesProvider) {
-
+    this.searchValue = "";
     this.pharmaciesProvider = pharmaciesProvider;
 
     this.displayLoader();
@@ -56,18 +59,12 @@ export class PharmaciesPage {
 
   // Action lorsque l'utilisateur clique sur un élément du sous menu.
   subMenuItemTapped(event, item) {
+
     $(`#${item}`).toggleClass('sub-menu-item-selected');
 
     switch(item) {
       // Bouton d'affichage des pharmacies favorites
       case 'favorites':
-        // Si l'option favoris est cochée, on recherche les pharmacies favorites,
-        // sinon, on affiche la liste par défaut
-        if ($(`#${item}`).attr('class') === 'sub-menu-item') {
-          this.search(null);
-        }else {
-          this.searchFavorites();
-        }
         break;
 
       // Bouton d'affichage du champ de recherche global
@@ -78,7 +75,12 @@ export class PharmaciesPage {
         else
           $searchBar.hide(500);
         break;
+
+      // Bouton d'affichage des pharmaices ouvertes
+      case 'open':
+        break;
     }
+    this.search(null);
   }
 
   // Navigue à la page de détails de la pharmacie
@@ -215,30 +217,99 @@ export class PharmaciesPage {
       })
   }
 
+  // Recherche les pharmacies ouvertes
+  searchOpened() {
+
+    this.displayLoader();
+
+    // Récupère les pharmacies favorites
+    this.pharmaciesProvider.searchOpenedPharmacies()
+      .then(pharmacies => {
+        this.loader.dismiss();
+        this.pharmacies = this.resolveOpen(pharmacies);
+        return this.pharmacies = this.formatDistance(pharmacies);
+      })
+  }
+
   // Recherche des pharmacies sur l'api et affiche le résultat de la recherche
   search(searchTerm) {
 
-    // Récupère la valeur de la barre de recherceh
-    let term = searchTerm && searchTerm.target.value || '';
+    let isNotOpen = $(`#open`).attr('class') === 'sub-menu-item';
+    let isNotFavorites = $(`#favorites`).attr('class') === 'sub-menu-item';
+    let isNotSearch = $(`#search`).attr('class') === 'sub-menu-item';
+    let isSearchValue = false;
+    let params = [];
 
-    // Recherche si au moins 1 caractère est saisie
-    if (term.trim() == '' || term.trim().length < 1) {
+    // Ajout du paramètre des pharmacies favorites
+    if (!isNotFavorites) {
+      // Récupère la valeur de la barre de recherceh
+      let favorites = localStorage.getItem('favorites').replace(/"/g,'') || '';
+      params.push(`_id=${favorites}`);
+    }
 
-      // Récupère les pharmacies et assigne à la variable locale pharmacies
+    // Ajout du paramètre des pharmacies ouvertes
+    if (!isNotOpen) {
+      let hourNow = Math.trunc(new Date().getHours() * 60 + new Date().getMinutes());
+      let day;
+
+      switch(new Date().getDay()) {
+        case 1: day = 'mo'; break;
+        case 2: day = 'tu'; break;
+        case 3: day = 'we'; break;
+        case 4: day = 'th'; break;
+        case 5: day = 'fr'; break;
+        case 6: day = 'sa'; break;
+        case 0: day = 'su'; break;
+      }
+      params.push(`hours.${day}=${hourNow}`);
+    }
+
+    // Ajout du paramètre de recherche
+    if (!isNotSearch) {
+
+      if (searchTerm){
+        this.searchValue = searchTerm.target.value;
+      }
+
+      isSearchValue = (this.searchValue.trim() != '' || this.searchValue.trim().length > 0);
+
+      if (isSearchValue) {
+        params.push(`cpville=*${this.searchValue.trim()}*`);
+      }
+
+    }
+
+    // Ajout de la géoloc si il n'y a pas les favoris et une valeur de recherche
+    if (isNotFavorites && !isSearchValue) {
+      Geolocation.getCurrentPosition().then((position) => {
+        params.push(`loc=[${position.coords.longitude},${position.coords.latitude}]`);
+
+        this.pharmaciesProvider
+          .searchMultiParams(params)
+          // Chargement de la liste des pharmacies par défaut
+          .then(pharmacies => {
+            this.pharmacies = this.resolveOpen(pharmacies);
+            this.pharmacies = this.formatDistance(pharmacies);
+          });
+
+      }, (err) => {
+        this.pharmaciesProvider
+          .searchMultiParams(params)
+          // Chargement de la liste des pharmacies par défaut
+          .then(pharmacies => {
+            this.pharmacies = this.resolveOpen(pharmacies);
+            this.pharmacies = this.formatDistance(pharmacies);
+          });
+      });
+    } else {
+
       this.pharmaciesProvider
-        .load()
+        .searchMultiParams(params)
         // Chargement de la liste des pharmacies par défaut
         .then(pharmacies => {
           this.pharmacies = this.resolveOpen(pharmacies);
-          return this.pharmacies = this.formatDistance(pharmacies);
-        })
-    } else {
-      // Récupère les pharmacies recherchées
-      this.pharmaciesProvider.searchPharmacies(term)
-        .then(pharmacies => {
-          this.pharmacies = this.resolveOpen(pharmacies);
-          return this.pharmacies = this.formatDistance(pharmacies);
-        })
+          this.pharmacies = this.formatDistance(pharmacies);
+        });
     }
   }
 
