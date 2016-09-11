@@ -102,7 +102,7 @@ export class PharmaciesPage {
       case 4: day = 'th'; break;
       case 5: day = 'fr'; break;
       case 6: day = 'sa'; break;
-      case 7: day = 'su'; break;
+      case 0: day = 'su'; break;
     }
 
     function addZero(i) {
@@ -210,6 +210,7 @@ export class PharmaciesPage {
     this.pharmaciesProvider.searchFavoritesPharmacies(favorites)
       .then(pharmacies => {
         this.loader.dismiss();
+        this.pharmacies = this.resolveOpen(pharmacies);
         return this.pharmacies = this.formatDistance(pharmacies);
       })
   }
@@ -228,12 +229,14 @@ export class PharmaciesPage {
         .load()
         // Chargement de la liste des pharmacies par défaut
         .then(pharmacies => {
+          this.pharmacies = this.resolveOpen(pharmacies);
           return this.pharmacies = this.formatDistance(pharmacies);
         })
     } else {
       // Récupère les pharmacies recherchées
       this.pharmaciesProvider.searchPharmacies(term)
         .then(pharmacies => {
+          this.pharmacies = this.resolveOpen(pharmacies);
           return this.pharmacies = this.formatDistance(pharmacies);
         })
     }
