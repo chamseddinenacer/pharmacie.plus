@@ -63,8 +63,10 @@ export class PharmaciesPage {
     $(`#${item}`).toggleClass('sub-menu-item-selected');
 
     switch(item) {
-      // Bouton d'affichage des pharmacies favorites
-      case 'favorites':
+
+      case 'favorites': // Bouton d'affichage des pharmacies favorites
+      case 'open':  // Bouton d'affichage des pharmaices ouvertes
+        this.search(null);
         break;
 
       // Bouton d'affichage du champ de recherche global
@@ -72,15 +74,16 @@ export class PharmaciesPage {
         let $searchBar = $('ion-searchbar');
         if ($searchBar.is(':hidden'))
           $searchBar.show(500);
-        else
+        else {
           $searchBar.hide(500);
-        break;
-
-      // Bouton d'affichage des pharmaices ouvertes
-      case 'open':
+          if (this.searchValue !== '') {
+            this.searchValue = '';
+            this.search(null);
+          }
+        }
         break;
     }
-    this.search(null);
+
   }
 
   // Navigue à la page de détails de la pharmacie
@@ -154,8 +157,13 @@ export class PharmaciesPage {
             }
           // Pas d'horaires renseignés pour l'après-midi.
           } else {
-            pharmacie.status = 0;
-            pharmacie.open = `Fermée`;
+            if (hourNow < pharmacie.hours[day].amo){
+              pharmacie.status = 0;
+              pharmacie.open = `Fermée (Ouverture à ${formatHours(pharmacie.hours[day].amo)})`; // Ouvre le matin
+            } else {
+              pharmacie.status = 0;
+              pharmacie.open = `Fermée`;
+            }
           }
 
         // Horaires renseignés que pour l'après-midi
