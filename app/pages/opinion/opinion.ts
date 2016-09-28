@@ -38,6 +38,10 @@ export class OpinionPage {
     private loadingController: LoadingController
   ) {
     this.pharmacieId = params.get('pharmacieId');
+
+    this.platform.ready().then(() => {
+      window.analytics.trackView('opinion');
+    });
   }
 
   // Affichage de la mire de chargment lors de la soumission du formulaire
@@ -50,6 +54,10 @@ export class OpinionPage {
 
   // Envoi du formulaire d'ajout d'un avis
   doSendOpinion(): void {
+
+    this.platform.ready().then(() => {
+      window.analytics.trackEvent('opinion', 'sendOpinion', 'Envoi de l\'avis client', 1);
+    });
 
     // Récupération des champs du formulaire
     let rate = $('#opinion-rate').val();

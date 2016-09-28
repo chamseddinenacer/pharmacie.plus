@@ -51,7 +51,7 @@ class MyApp {
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
       StatusBar.backgroundColorByHexString('#4Da84d')
-
+      window.analytics.startTrackerWithId('UA-84949508-1');
     });
   }
 

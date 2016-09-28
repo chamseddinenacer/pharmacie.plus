@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController, Platform} from 'ionic-angular';
 
 @Component({
   templateUrl: 'build/pages/about/about.html'
@@ -7,9 +7,12 @@ import {NavController} from 'ionic-angular';
 export class AboutPage {
 
   constructor(
-    private navController: NavController
+    private navController: NavController,
+    private platform: Platform
   ) {
-
+    this.platform.ready().then(() => {
+      window.analytics.trackView('about');
+    });
   }
 
 }

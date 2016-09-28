@@ -72,6 +72,10 @@ export class HoursPage {
     this.pharmacie = params.get('pharmacie');
     this.leftEvent = params.get('event');
     this.initHoursForm();
+
+    this.platform.ready().then(() => {
+      window.analytics.trackView('hours');
+    });
   }
 
   // Initialise la valeur des champs du formulaire avec les heures de la pharmacie. 0 si pas d'horaires
@@ -166,6 +170,9 @@ export class HoursPage {
   // Envoi du formulaire d'ajout d'un avis
   doSendHours(): void {
 
+    this.platform.ready().then(() => {
+      window.analytics.trackEvent('opinion', 'sendHours', 'Envoi des horaires', 1);
+    });
 
     let ttom = (time) => parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1]);
 

@@ -64,6 +64,10 @@ export class PharmacieDetailsPage {
     this.moment = moment;
     this.platform = platform;
 
+    this.platform.ready().then(() => {
+      window.analytics.trackView('pharmacie-details');
+    });
+
     // Récupération des paramètres id et raison sociale depuis les paramètres de navigation
     this.id = navParams.get('id');
     this.rs = navParams.get('rs');
@@ -155,6 +159,10 @@ export class PharmacieDetailsPage {
   // Ajoute la pharmacie à la liste des pharmacies favorites
   toggleFavorite() {
 
+    this.platform.ready().then(() => {
+      window.analytics.trackEvent('pharmacie-details', 'toggleFavorite', 'Ajout / Retirer la pharmacie des favoris', 1);
+    });
+
     let $favorites = $('ion-icon#favorites');
 
     let isFavorites = $favorites.attr('class') === 'ion-md-star',
@@ -241,6 +249,10 @@ Fax: ${this.pharmacie.fax}`,
   // Chargement de la carte google map centré sur la pharmacie
   displayMap() {
 
+    this.platform.ready().then(() => {
+      window.analytics.trackEvent('pharmacie-details', 'displayMap', 'Affichage de la carte', 1);
+    });
+
     setTimeout(function() {
       // Coordonnées géographique de la pharmacie
       let latLng = new google.maps.LatLng(this.pharmacie.loc[1], this.pharmacie.loc[0]);
@@ -268,6 +280,10 @@ Fax: ${this.pharmacie.fax}`,
 
   // Récupère les avis de la pharmacie et calcul la note moyenne.
   fetchOpinions() {
+
+    this.platform.ready().then(() => {
+      window.analytics.trackEvent('pharmacie-details', 'fetchOpinions', 'Afficher la liste des avis', 1);
+    });
 
     // Récupération des avis depuis l'API en appelant la fonction load du provider Opinions.
     this.opinionsProvider.load(this.pharmacie._id)
