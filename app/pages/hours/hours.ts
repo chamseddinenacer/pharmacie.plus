@@ -1,6 +1,7 @@
 import {Component, EventEmitter} from '@angular/core';
 //import {FormBuilder, Validators} from '@angular/common';
 import {ModalController, Platform, NavParams, ViewController, NavController, ToastController, LoadingController} from 'ionic-angular';
+import {GoogleAnalytics } from 'ionic-native';
 
 // Importantion du provider de Pharmacies
 import {PharmaciesProvider} from '../../providers/pharmacies/pharmacies';
@@ -74,7 +75,7 @@ export class HoursPage {
     this.initHoursForm();
 
     this.platform.ready().then(() => {
-      window.analytics.trackView('hours');
+      GoogleAnalytics.trackView('hours');
     });
   }
 
@@ -171,7 +172,7 @@ export class HoursPage {
   doSendHours(): void {
 
     this.platform.ready().then(() => {
-      window.analytics.trackEvent('opinion', 'sendHours', 'Envoi des horaires', 1);
+      GoogleAnalytics.trackEvent('opinion', 'sendHours', 'Envoi des horaires', 1);
     });
 
     let ttom = (time) => parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1]);

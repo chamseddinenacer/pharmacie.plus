@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, EventEmitter, ApplicationRef, NgZone } from '@angular/core';
 import { ModalController, NavController, NavParams, ToastController, Platform, LoadingController } from 'ionic-angular';
-import { SocialSharing, Push } from 'ionic-native';
+import { SocialSharing, Push, GoogleAnalytics } from 'ionic-native';
 
 
 // Importantion du provider de Pharmacies
@@ -65,7 +65,7 @@ export class PharmacieDetailsPage {
     this.platform = platform;
 
     this.platform.ready().then(() => {
-      window.analytics.trackView('pharmacie-details');
+      GoogleAnalytics.trackView('pharmacie-details');
     });
 
     // Récupération des paramètres id et raison sociale depuis les paramètres de navigation
@@ -160,7 +160,7 @@ export class PharmacieDetailsPage {
   toggleFavorite() {
 
     this.platform.ready().then(() => {
-      window.analytics.trackEvent('pharmacie-details', 'toggleFavorite', 'Ajout / Retirer la pharmacie des favoris', 1);
+      GoogleAnalytics.trackEvent('pharmacie-details', 'toggleFavorite', 'Ajout / Retirer la pharmacie des favoris', 1);
     });
 
     let $favorites = $('ion-icon#favorites');
@@ -250,7 +250,7 @@ Fax: ${this.pharmacie.fax}`,
   displayMap() {
 
     this.platform.ready().then(() => {
-      window.analytics.trackEvent('pharmacie-details', 'displayMap', 'Affichage de la carte', 1);
+      GoogleAnalytics.trackEvent('pharmacie-details', 'displayMap', 'Affichage de la carte', 1);
     });
 
     setTimeout(function() {
@@ -282,7 +282,7 @@ Fax: ${this.pharmacie.fax}`,
   fetchOpinions() {
 
     this.platform.ready().then(() => {
-      window.analytics.trackEvent('pharmacie-details', 'fetchOpinions', 'Afficher la liste des avis', 1);
+      GoogleAnalytics.trackEvent('pharmacie-details', 'fetchOpinions', 'Afficher la liste des avis', 1);
     });
 
     // Récupération des avis depuis l'API en appelant la fonction load du provider Opinions.

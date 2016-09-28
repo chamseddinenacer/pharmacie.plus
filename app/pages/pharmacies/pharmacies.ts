@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, LoadingController, Platform  } from 'ionic-angular';
-import {Geolocation} from 'ionic-native'
+import {Geolocation, GoogleAnalytics} from 'ionic-native'
 
 // Importantion du provider de Pharmacies
 import {PharmaciesProvider} from '../../providers/pharmacies/pharmacies';
@@ -34,12 +34,12 @@ export class PharmaciesPage {
   loader: any;
 
   // Injection du provider dans le constructor denotre page composant
-  constructor(public nav: NavController, private loadingController: LoadingController, pharmaciesProvider: PharmaciesProvider, platform: Platform) {
+  constructor(public nav: NavController, private loadingController: LoadingController, pharmaciesProvider: PharmaciesProvider, private platform: Platform) {
     this.searchValue = "";
     this.pharmaciesProvider = pharmaciesProvider;
 
     this.platform.ready().then(() => {
-      window.analytics.trackView('pharmacies');
+      GoogleAnalytics.trackView('pharmacies');
     });
 
     this.displayLoader();
@@ -67,7 +67,7 @@ export class PharmaciesPage {
     $(`#${item}`).toggleClass('sub-menu-item-selected');
 
     this.platform.ready().then(() => {
-      window.analytics.trackEvent('pharmacies', 'subMenuItem', item, 1);
+      GoogleAnalytics.trackEvent('pharmacies', 'subMenuItem', item, 1);
     });
 
     switch(item) {

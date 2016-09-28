@@ -3,7 +3,7 @@ enableProdMode();
 
 import {Component, ViewChild} from '@angular/core';
 import {ionicBootstrap, Platform, MenuController, Nav} from 'ionic-angular';
-import {StatusBar, Splashscreen} from 'ionic-native';
+import {StatusBar, Splashscreen, GoogleAnalytics} from 'ionic-native';
 
 import {PushwooshService} from './providers/pushwoosh/ionic2-pushwoosh.service';
 // Importantion du provider Subscriber
@@ -50,8 +50,14 @@ class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
-      StatusBar.backgroundColorByHexString('#4Da84d')
-      window.analytics.startTrackerWithId('UA-84949508-1');
+      StatusBar.backgroundColorByHexString('#4Da84d');
+
+      GoogleAnalytics.debugMode();
+      GoogleAnalytics.startTrackerWithId('UA-84949508-1');
+
+      GoogleAnalytics.enableUncaughtExceptionReporting(true)
+        .then((_success) => {console.log(_success)})
+        .catch((_error) => {console.log(_error)})
     });
   }
 

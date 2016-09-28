@@ -10,7 +10,7 @@ import { REACTIVE_FORM_DIRECTIVES} from '@angular/forms';
 
 import {FORM_DIRECTIVES, FormBuilder,  ControlGroup, Validators, AbstractControl} from '@angular/common';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
-
+import {GoogleAnalytics } from 'ionic-native';
 
 declare var $;
 declare var moment;
@@ -40,7 +40,7 @@ export class OpinionPage {
     this.pharmacieId = params.get('pharmacieId');
 
     this.platform.ready().then(() => {
-      window.analytics.trackView('opinion');
+      GoogleAnalytics.trackView('opinion');
     });
   }
 
@@ -56,7 +56,7 @@ export class OpinionPage {
   doSendOpinion(): void {
 
     this.platform.ready().then(() => {
-      window.analytics.trackEvent('opinion', 'sendOpinion', 'Envoi de l\'avis client', 1);
+      GoogleAnalytics.trackEvent('opinion', 'sendOpinion', 'Envoi de l\'avis client', 1);
     });
 
     // Récupération des champs du formulaire
