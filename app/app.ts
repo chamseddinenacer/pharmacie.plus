@@ -78,4 +78,6 @@ class MyApp {
 
 }
 
-ionicBootstrap(MyApp);
+
+let prodMode: boolean = window.hasOwnProperty('cordova');
+ionicBootstrap(MyApp, [], {prodMode: prodMode});
