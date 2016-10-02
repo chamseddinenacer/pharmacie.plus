@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="fr.jdflaugergues.pharmacieplus"
         version="1.1.2"
+        android-versionCode="101020"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Pharmacies France Horaires</name>
