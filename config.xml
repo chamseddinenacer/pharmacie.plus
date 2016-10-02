@@ -3,7 +3,7 @@
         version="1.1.2"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>Pharmacie +</name>
+  <name>Pharmacies France Horaires</name>
   <description>Avec Pharmacie Plus, trouvez toutes les informations des pharmacies les plus proches de chez vous.</description>
   <author email="jdflaugergues@gmail.com">Jonathan de Flaugergues</author>
   <content src="index.html"/>
